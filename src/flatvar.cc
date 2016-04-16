@@ -271,21 +271,32 @@ void FlatVar::LOCATE_TRANS()
 		if ( !limitLow || !limitHigh ) {
 			out << "	if ( ";
 
-			if ( !limitHigh )
-				out << GET_KEY() << " <= " << highKey;
+			if (lowKey != highKey) {
+				if ( !limitLow )
+					out << GET_KEY() << " >= " << lowKey;
 
-			if ( !limitHigh && !limitLow )
-				out << " && ";
+				if ( !limitHigh && !limitLow )
+					out << " && ";
 
-			if ( !limitLow )
-				out << GET_KEY() << " >= " << lowKey;
+				if ( !limitHigh )
+					out << GET_KEY() << " <= " << highKey;
+			}
+			else {
+				out << GET_KEY() << " == " << lowKey;
+			}
 
 			out << " )\n	{\n";
 		}
 
 		out <<
-			"       int _ic = " << CAST( "int" ) << ARR_REF( charClass ) << "[" << GET_KEY() <<
-							" - " << lowKey << "];\n"
+			"       int _ic = " << CAST("int") << ARR_REF( charClass ) << "[" << GET_KEY();
+
+		if (!limitLow) {
+			out << " - " << lowKey;
+		}
+
+		out <<
+			"];\n"
 			"		if ( _ic <= " << CAST( "int" ) << DEREF( ARR_REF( keys ), "_keys+1" ) << " && " <<
 						"_ic >= " << CAST( "int" ) << DEREF( ARR_REF( keys ), "_keys" ) << " )\n"
 			"			_trans = " << CAST( UINT() ) << DEREF( ARR_REF( indicies ),
