@@ -177,15 +177,14 @@ std::ostream &SwitchLoopGoto::EXEC_FUNCS()
 	/* Make labels that set acts and jump to execFuncs. Loop func indicies. */
 	for ( GenActionTableMap::Iter redAct = redFsm->actionMap; redAct.lte(); redAct++ ) {
 		if ( redAct->numTransRefs > 0 ) {
-			out << "	f" << redAct->actListId << ": " <<
+			out << LABEL( "f", redAct->actListId ) << " {\n"
 				"_acts = " << OFFSET( ARR_REF( actions ), itoa( redAct->location+1 ) ) << ";"
-				" goto execFuncs;\n";
+				" goto execFuncs;\n"
+				"}\n";
 		}
 	}
 
-	out <<
-		"\n"
-		"execFuncs:\n";
+	out << "\n" << LABEL( "execFuncs" ) << " {\n";
 
 	if ( redFsm->anyRegNbreak() )
 		out << "	_nbreak = 0;\n";
@@ -210,7 +209,9 @@ std::ostream &SwitchLoopGoto::EXEC_FUNCS()
 	}
 
 	out <<
-		"	goto _again;\n";
+		"	goto _again;\n"
+		"}\n";
+		
 	return out;
 }
 
@@ -220,7 +221,7 @@ void SwitchLoopGoto::writeExec()
 	testEofUsed = false;
 	outLabelUsed = false;
 
-	out << "	{\n";
+	out << ENTRY() << " {\n";
 
 	if ( redFsm->anyRegCurStateRef() )
 		out << "	int _ps = 0;\n";
@@ -253,7 +254,7 @@ void SwitchLoopGoto::writeExec()
 			"		goto _out;\n";
 	}
 
-	out << "_resume:\n";
+	out << LABEL( "_resume" ) << " {\n";
 
 	if ( redFsm->anyFromStateActions() ) {
 		out <<
@@ -276,14 +277,14 @@ void SwitchLoopGoto::writeExec()
 		"	switch ( " << vCS() << " ) {\n";
 		STATE_GOTOS() <<
 		"	}\n"
-		"\n";
+		"}\n";
 		TRANSITIONS() <<
 		"\n";
 
 	if ( redFsm->anyRegActions() )
 		EXEC_FUNCS() << "\n";
 
-	out << "_again:\n";
+	out << LABEL( "_again" ) << " {\n";
 
 	if ( redFsm->anyToStateActions() ) {
 		out <<
@@ -318,9 +319,11 @@ void SwitchLoopGoto::writeExec()
 			"	" << P() << " += 1;\n"
 			"	goto _resume;\n";
 	}
+	
+	out << "}\n";
 
 	if ( testEofUsed )
-		out << "	_test_eof: {}\n";
+		out << LABEL( "_test_eof" ) << " {\n";
 
 	if ( redFsm->anyEofTrans() || redFsm->anyEofActions() ) {
 		out << 
@@ -362,11 +365,17 @@ void SwitchLoopGoto::writeExec()
 			"	}\n"
 			"\n";
 	}
+	
+	if ( testEofUsed )
+		out << "}\n";
 
 	if ( outLabelUsed )
-		out << "	_out: {}\n";
+		out << LABEL( "_out" ) << " {\n";
 
 	NFA_POP();
-
-	out << "	}\n";
+	
+	if ( outLabelUsed )
+		out << "}\n";
+		
+	out << "}\n";
 }

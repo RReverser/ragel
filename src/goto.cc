@@ -542,7 +542,7 @@ std::ostream &Goto::STATE_GOTOS()
 std::ostream &Goto::TRANSITION( RedCondPair *pair )
 {
 	/* Write the label for the transition so it can be jumped to. */
-	out << "	ctr" << pair->id << ": ";
+	out << LABEL( "ctr", pair->id ) << " {\n";
 
 	/* Destination state. */
 	if ( pair->action != 0 && pair->action->anyCurStateRef() )
@@ -557,6 +557,9 @@ std::ostream &Goto::TRANSITION( RedCondPair *pair )
 		/* No code to execute, just loop around. */
 		out << "goto _again;\n";
 	}
+	
+	out << "}\n";
+	
 	return out;
 }
 

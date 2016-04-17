@@ -250,7 +250,7 @@ bool IpGoto::IN_TRANS_ACTIONS( RedStateAp *state )
 			anyWritten = true;
 
 			/* Write the label for the transition so it can be jumped to. */
-			out << "ctr" << trans->id << ":\n";
+			out << LABEL( "ctr", trans->id ) << " {\n";
 
 			/* If the action contains a next, then we must preload the current
 			 * state since the action may or may not set it. */
@@ -281,6 +281,8 @@ bool IpGoto::IN_TRANS_ACTIONS( RedStateAp *state )
 				out << "\n\tgoto _again;\n";
 			else
 				out << "\n\tgoto st" << trans->targ->id << ";\n";
+				
+			out << "}\n";
 		}
 	}
 
@@ -295,7 +297,7 @@ void IpGoto::GOTO_HEADER( RedStateAp *state )
 	IN_TRANS_ACTIONS( state );
 
 	if ( state->labelNeeded ) 
-		out << "st" << state->id << ":\n";
+		out << LABEL( "st", state->id ) << " {\n";
 
 	if ( state->toStateAction != 0 ) {
 		/* Write every action in the list. */
@@ -318,10 +320,11 @@ void IpGoto::GOTO_HEADER( RedStateAp *state )
 			out << 
 				"	" << P() << " += 1;\n";
 		}
+		out << "}\n";
 	}
 
 	/* Give the state a switch case. */
-	out << "st_case_" << state->id << ":\n";
+	out << LABEL( "st_case_", state->id ) << " {\n";
 
 	if ( state->fromStateAction != 0 ) {
 		/* Write every action in the list. */
@@ -344,14 +347,16 @@ void IpGoto::STATE_GOTO_ERROR()
 	RedStateAp *state = redFsm->errState;
 	IN_TRANS_ACTIONS( state );
 
-	out << "st_case_" << state->id << ":\n";
+	out << LABEL( "st_case_", state->id ) << " {\n";
 	if ( state->labelNeeded ) 
-		out << "st" << state->id << ":\n";
+		out << "}\n" << LABEL ( "st", state->id ) << " {\n";
 
 	/* Break out here. */
 	outLabelUsed = true;
 	out << vCS() << " = " << state->id << ";\n";
 	out << "	goto _out;\n";
+	
+	out << "}\n";
 }
 
 
@@ -412,8 +417,8 @@ std::ostream &IpGoto::EXIT_STATES()
 	for ( RedStateList::Iter st = redFsm->stateList; st.lte(); st++ ) {
 		if ( st->outNeeded ) {
 			testEofUsed = true;
-			out << "	_test_eof" << st->id << ": " << vCS() << " = " << 
-					st->id << "; goto _test_eof; \n";
+			out << LABEL( "_test_eof", st->id ) << " {" << vCS() << " = " << 
+					st->id << "; goto _test_eof; }\n";
 		}
 	}
 	return out;
@@ -528,6 +533,9 @@ std::ostream &IpGoto::STATE_GOTOS()
 			/* Write the default transition. */
 			out << "{\n";
 			TRANS_GOTO( st->defTrans, 1 ) << "\n";
+			out << "}\n";
+			
+			/* Close the opened GOTO label */
 			out << "}\n";
 		}
 	}
@@ -655,7 +663,7 @@ void IpGoto::writeExec()
 	testEofUsed = false;
 	outLabelUsed = false;
 
-	out << "	{\n";
+	out << ENTRY() << " {\n";
 
 	if ( redFsm->anyRegNbreak() )
 		out << "	int _nbreak;\n";
@@ -674,16 +682,16 @@ void IpGoto::writeExec()
 		out << 
 			"	goto _resume;\n"
 			"\n"
-			"_again:\n"
+			<< LABEL( "_again" ) << " {\n"
 			"	switch ( " << vCS() << " ) {\n";
 			AGAIN_CASES() <<
 			"	}\n"
-			"\n";
+			"}\n";
 
 	}
 
 	if ( useAgainLabel() || redFsm->anyNfaStates() ) 
-		out << "_resume:\n";
+		out << LABEL( "_resume" ) << " {\n";
 
 	out <<
 		"	switch ( " << vCS() << " )\n"
@@ -691,13 +699,15 @@ void IpGoto::writeExec()
 		STATE_GOTO_CASES() <<
 		"	}\n"
 		"	goto st_out;\n";
-		STATE_GOTOS() <<
-		"	st_out:\n";
-		EXIT_STATES() <<
+
+	STATE_GOTOS() <<
+		LABEL( "st_out" ) << " {}\n";
+	
+	EXIT_STATES() <<
 		"\n";
 
 	if ( testEofUsed ) 
-		out << "	_test_eof: {}\n";
+		out << LABEL( "_test_eof" ) << " {\n";
 
 	if ( redFsm->anyEofTrans() || redFsm->anyEofActions() ) {
 		out <<
@@ -709,11 +719,17 @@ void IpGoto::writeExec()
 			"	}\n"
 			"\n";
 	}
+	
+	if (testEofUsed)
+		out << "}\n";
 
 	if ( outLabelUsed ) 
-		out << "	_out: {}\n";
+		out << LABEL( "_out" ) << " {\n";
 
 	NFA_POP();
+	
+	if ( outLabelUsed )
+		out << "}\n";
 
 	out <<
 		"	}\n";

@@ -324,6 +324,13 @@ protected:
 		else
 			return "label " + name;
 	}
+	
+	string LABEL( string type, long i )
+	{
+		std::stringstream s;
+		s << type << i;
+		return LABEL( s.str() );
+	}
 
 	string OFFSET( string arr, string off )
 	{

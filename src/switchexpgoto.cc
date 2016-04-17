@@ -75,7 +75,7 @@ std::ostream &SwitchExpGoto::EXEC_ACTIONS()
 	for ( GenActionTableMap::Iter redAct = redFsm->actionMap; redAct.lte(); redAct++ ) {
 		if ( redAct->numTransRefs > 0 ) {
 			/* 	We are at the start of a glob, write the case. */
-			out << "f" << redAct->actListId << ":\n";
+			out << LABEL( "f", redAct->actListId ) << " {\n";
 
 			if ( redFsm->anyRegNbreak() )
 				out << "_nbreak = 0;\n";
@@ -93,6 +93,8 @@ std::ostream &SwitchExpGoto::EXEC_ACTIONS()
 
 
 			out << "\n\tgoto _again;\n";
+			
+			out << "}\n";
 		}
 	}
 	return out;
@@ -224,7 +226,7 @@ void SwitchExpGoto::writeExec()
 	testEofUsed = false;
 	outLabelUsed = false;
 
-	out << "	{\n";
+	out << ENTRY() << " {\n";
 
 	if ( redFsm->anyRegCurStateRef() )
 		out << "	int _ps = 0;\n";
@@ -248,7 +250,7 @@ void SwitchExpGoto::writeExec()
 			"		goto _out;\n";
 	}
 
-	out << "_resume:\n";
+	out << LABEL( "_resume" ) << " {\n";
 
 	if ( redFsm->anyFromStateActions() ) {
 		out <<
@@ -264,14 +266,14 @@ void SwitchExpGoto::writeExec()
 		"	switch ( " << vCS() << " ) {\n";
 		STATE_GOTOS() <<
 		"	}\n"
-		"\n";
+		"}\n";
 		TRANSITIONS() << 
 		"\n";
 
 	if ( redFsm->anyRegActions() )
 		EXEC_ACTIONS() << "\n";
 
-	out << "_again:\n";
+	out << LABEL( "_again" ) << " {\n";
 
 	if ( redFsm->anyToStateActions() ) {
 		out <<
@@ -299,9 +301,11 @@ void SwitchExpGoto::writeExec()
 			"	" << P() << " += 1;\n"
 			"	goto _resume;\n";
 	}
+	
+	out << "}\n";
 
 	if ( testEofUsed )
-		out << "	_test_eof: {}\n";
+		out << LABEL( "_test_eof" ) << " {\n";
 
 	if ( redFsm->anyEofTrans() || redFsm->anyEofActions() ) {
 		out <<
@@ -334,11 +338,17 @@ void SwitchExpGoto::writeExec()
 			"	}\n"
 			"\n";
 	}
+	
+	if ( testEofUsed )
+		out << "}\n";
 
 	if ( outLabelUsed )
-		out << "	_out: {}\n";
+		out << LABEL( "_out" ) << " {\n";
 
 	NFA_POP();
-
+	
+	if ( outLabelUsed )
+		out << "}\n";
+		
 	out << "	}\n";
 }
