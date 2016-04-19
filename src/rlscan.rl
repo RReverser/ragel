@@ -875,7 +875,7 @@ ifstream *Scanner::tryOpenInclude( char **pathChecks, long &found )
 
 		"$" [a-zA-Z_][a-zA-Z_0-9]* => {
 			if ( parser != 0 && parser->parseSubstitutions )
-				token( TK_SubstRef, ts+1, te );
+				token( TK_SubstRef, ts, te );
 			else {
 				token( IL_Symbol, ts, ts+1 );
 				fexec ts+1;

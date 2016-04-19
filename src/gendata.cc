@@ -459,9 +459,9 @@ void CodeGenData::makeGenInlineList( GenInlineList *outList, InlineList *inList 
 			makeSubList( outList, item->children, GenInlineItem::GenStmt );
 			break;
 		case InlineItem::Subst: {
-			/* Find the subst action. */
-			Action *subst = curInlineAction->argList->data[item->substPos];
-			makeGenInlineList( outList, subst->inlineList );
+			if ( item->wrappedAction == 0 )
+				item->wrappedAction = curInlineAction->argList->data[item->substPos];
+			makeGenInlineList( outList, item->wrappedAction->inlineList );
 			break;
 		}
 		case InlineItem::NfaWrapAction: {

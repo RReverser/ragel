@@ -887,6 +887,9 @@ struct InlineItem
 	InlineItem( const InputLoc &loc, Type type ) : 
 		loc(loc), nameRef(0), children(0), type(type) { }
 
+	InlineItem( const InputLoc &loc, long substPos, Type type ) :
+		loc(loc), substPos(substPos), wrappedAction(0), type(type) { }
+
 	InlineItem( const InputLoc &loc, Action *wrappedAction, Type type )
 	:
 		loc(loc), nameRef(0), children(0), longestMatch(0),
