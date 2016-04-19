@@ -1345,7 +1345,7 @@ reduction TopLevel
 		}
 
 		if ( api.end() )
-			pd->id->error( @1 ) << "invalid parameter reference \"$" << $1->data << "\"" << endl;
+			pd->id->error( @1 ) << "invalid parameter reference \"$" << data << "\"" << endl;
 		else {
 			$$->inlineItem->substPos = api.pos();
 		}
