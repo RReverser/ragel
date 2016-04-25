@@ -234,8 +234,8 @@ namespace ragel
 	|	[] :Empty
 
 	def named_action_ref
-		[word] :Plain
-	|	[word `( opt_action_arg_list `)] :Args
+		[word `( opt_action_arg_list `)] :Args
+	|	[word] :Plain
 
 	def action_ref 
 		[named_action_ref] :NamedRef
