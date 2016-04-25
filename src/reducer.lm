@@ -161,7 +161,7 @@ reduction TopLevel
 		string data( $word->data, $word->length );
 		if ( pd->actionDict.find( data ) ) {
 			/* Recover by just ignoring the duplicate. */
-			pd->id->error(@word) << "action \"" << data << "\" already defined" << endl;
+			pd->id->warning(@word) << "action \"" << data << "\" already defined" << endl;
 		}
 		else {
 			/* Add the action to the list of actions. */
@@ -183,7 +183,7 @@ reduction TopLevel
 		string data( $word->data, $word->length );
 		if ( pd->actionDict.find( data ) ) {
 			/* Recover by just ignoring the duplicate. */
-			pd->id->error(@word) << "action \"" << data << "\" already defined" << endl;
+			pd->id->warning(@word) << "action \"" << data << "\" already defined" << endl;
 		}
 		else {
 			/* Add the action to the list of actions. */
@@ -203,7 +203,7 @@ reduction TopLevel
 	{
 		if ( pd->prePushExpr != 0 ) {
 			/* Recover by just ignoring the duplicate. */
-			pd->id->error(@1) << "prepush code already defined" << endl;
+			pd->id->warning(@1) << "prepush code already defined" << endl;
 		}
 		pd->prePushExpr = new InlineBlock( @1, $action_block->inlineList );
 
@@ -212,7 +212,7 @@ reduction TopLevel
 	{
 		if ( pd->postPopExpr != 0 ) {
 			/* Recover by just ignoring the duplicate. */
-			pd->id->error(@1) << "postpop code already defined" << endl;
+			pd->id->warning(@1) << "postpop code already defined" << endl;
 		}
 		pd->postPopExpr = new InlineBlock( @1, $action_block->inlineList );
 	}
@@ -223,7 +223,7 @@ reduction TopLevel
 	{
 		if ( pd->nfaPrePushExpr != 0 ) {
 			/* Recover by just ignoring the duplicate. */
-			pd->id->error(@1) << "nfa_pre_push code already defined" << endl;
+			pd->id->warning(@1) << "nfa_pre_push code already defined" << endl;
 		}
 
 		pd->nfaPrePushExpr = new InlineBlock( @1, $action_block->inlineList );
@@ -235,7 +235,7 @@ reduction TopLevel
 	{
 		if ( pd->nfaPostPopExpr != 0 ) {
 			/* Recover by just ignoring the duplicate. */
-			pd->id->error(@1) << "nfa_post_pop code already defined" << endl;
+			pd->id->warning(@1) << "nfa_post_pop code already defined" << endl;
 		}
 
 		pd->nfaPostPopExpr = new InlineBlock( @1, $action_block->inlineList );
@@ -285,7 +285,7 @@ reduction TopLevel
 		string one( $W1->data, $W1->length );
 		if ( ! pd->setAlphType( @W1, hostLang, one.c_str() ) ) {
 			// Recover by ignoring the alphtype statement.
-			pd->id->error(@W1) << "\"" << one << 
+			pd->id->warning(@W1) << "\"" << one << 
 					"\" is not a valid alphabet type" << endl;
 		}
 	}
@@ -296,7 +296,7 @@ reduction TopLevel
 		string two( $W2->data, $W2->length );
 		if ( ! pd->setAlphType( @W1, hostLang, one.c_str(), two.c_str() ) ) {
 			// Recover by ignoring the alphtype statement.
-			pd->id->error(@W1) << "\"" << one << 
+			pd->id->warning(@W1) << "\"" << one << 
 					"\" is not a valid alphabet type" << endl;
 		}
 	}
@@ -679,7 +679,7 @@ reduction TopLevel
 		}
 		else {
 			/* Will recover by returning null as the action. */
-			pd->id->error(@word) << "action lookup of \"" << data << "\" failed" << endl;
+			pd->id->warning(@word) << "action lookup of \"" << data << "\" failed" << endl;
 			$$->action = 0;
 		}
 	}
@@ -698,7 +698,7 @@ reduction TopLevel
 		}
 		else {
 			/* Will recover by returning null as the action. */
-			pd->id->error(@word) << "action lookup of \"" << data << "\" failed" << endl;
+			pd->id->warning(@word) << "action lookup of \"" << data << "\" failed" << endl;
 			$$->action = 0;
 		}
 
@@ -1885,7 +1885,7 @@ reduction TopLevel
 		long rep = strtol( data.c_str(), 0, 10 );
 		if ( errno == ERANGE && rep == LONG_MAX ) {
 			// Repetition too large. Recover by returing repetition 1. */
-			pd->id->error(@uint) << "repetition number " << data << " overflows" << endl;
+			pd->id->warning(@uint) << "repetition number " << data << " overflows" << endl;
 			$$->rep = 1;
 		}
 		else {
@@ -2002,12 +2002,12 @@ reduction TopLevel
 		GraphDictEl *gdNode = pd->graphDict.find( s );
 		if ( gdNode == 0 ) {
 			/* Recover by returning null as the factor node. */
-			pd->id->error(loc) << "graph lookup of \"" << s << "\" failed" << endl;
+			pd->id->warning(loc) << "graph lookup of \"" << s << "\" failed" << endl;
 			$$->factor = 0;
 		}
 		else if ( gdNode->isInstance ) {
 			/* Recover by retuning null as the factor node. */
-			pd->id->error(loc) << "references to graph instantiations not allowed "
+			pd->id->warning(loc) << "references to graph instantiations not allowed "
 					"in expressions" << endl;
 			$$->factor = 0;
 		}

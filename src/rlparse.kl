@@ -91,7 +91,7 @@ pre_push_spec:
 	final {
 		if ( pd->prePushExpr != 0 ) {
 			/* Recover by just ignoring the duplicate. */
-			pd->id->error($2->loc) << "pre_push code already defined" << endl;
+			pd->id->warning($2->loc) << "pre_push code already defined" << endl;
 		}
 
 		pd->prePushExpr = new InlineBlock( $2->loc, $3->inlineList );
@@ -103,7 +103,7 @@ post_pop_spec:
 	final {
 		if ( pd->postPopExpr != 0 ) {
 			/* Recover by just ignoring the duplicate. */
-			pd->id->error($2->loc) << "post_pop code already defined" << endl;
+			pd->id->warning($2->loc) << "post_pop code already defined" << endl;
 		}
 
 		pd->postPopExpr = new InlineBlock( $2->loc, $3->inlineList );
@@ -114,7 +114,7 @@ nfa_pre_push_spec:
 	final {
 		if ( pd->nfaPrePushExpr != 0 ) {
 			/* Recover by just ignoring the duplicate. */
-			pd->id->error($2->loc) << "nfa_pre_push code already defined" << endl;
+			pd->id->warning($2->loc) << "nfa_pre_push code already defined" << endl;
 		}
 
 		pd->nfaPrePushExpr = new InlineBlock( $2->loc, $3->inlineList );
@@ -125,7 +125,7 @@ nfa_post_pop_spec:
 	final {
 		if ( pd->nfaPostPopExpr != 0 ) {
 			/* Recover by just ignoring the duplicate. */
-			pd->id->error($2->loc) << "nfa_post_pop code already defined" << endl;
+			pd->id->warning($2->loc) << "nfa_post_pop code already defined" << endl;
 		}
 
 		pd->nfaPostPopExpr = new InlineBlock( $2->loc, $3->inlineList );
@@ -350,7 +350,7 @@ action_spec:
 	final {
 		if ( pd->actionDict.find( $2->data ) ) {
 			/* Recover by just ignoring the duplicate. */
-			pd->id->error($2->loc) << "action \"" << $2->data << "\" already defined" << endl;
+			pd->id->warning($2->loc) << "action \"" << $2->data << "\" already defined" << endl;
 		}
 		else {
 			/* Add the action to the list of actions. */
@@ -374,7 +374,7 @@ alphtype_spec:
 	KW_AlphType TK_Word TK_Word ';' final {
 		if ( ! pd->setAlphType( $1->loc, hostLang, $2->data, $3->data ) ) {
 			// Recover by ignoring the alphtype statement.
-			pd->id->error($2->loc) << "\"" << $2->data << 
+			pd->id->warning($2->loc) << "\"" << $2->data <<
 					" " << $3->data << "\" is not a valid alphabet type" << endl;
 		}
 	};
@@ -383,7 +383,7 @@ alphtype_spec:
 	KW_AlphType TK_Word ';' final {
 		if ( ! pd->setAlphType( $1->loc, hostLang, $2->data ) ) {
 			// Recover by ignoring the alphtype statement.
-			pd->id->error($2->loc) << "\"" << $2->data << 
+			pd->id->warning($2->loc) << "\"" << $2->data <<
 					"\" is not a valid alphabet type" << endl;
 		}
 	};
@@ -1001,7 +1001,7 @@ named_action_ref:
 		}
 		else {
 			/* Will recover by returning null as the action. */
-			pd->id->error($1->loc) << "action lookup of \"" << $1->data << "\" failed" << endl;
+			pd->id->warning($1->loc) << "action lookup of \"" << $1->data << "\" failed" << endl;
 			$$->action = 0;
 		}
 	};
@@ -1025,7 +1025,7 @@ named_action_ref:
 		}
 		else {
 			/* Will recover by returning null as the action. */
-			pd->id->error($1->loc) << "action lookup of \"" << $1->data << "\" failed" << endl;
+			pd->id->warning($1->loc) << "action lookup of \"" << $1->data << "\" failed" << endl;
 			$$->action = 0;
 		}
 	}
@@ -1105,13 +1105,13 @@ priority_aug:
 		long aug = strtol( data, 0, 10 );
 		if ( errno == ERANGE && aug == LONG_MAX ) {
 			/* Priority number too large. Recover by setting the priority to 0. */
-			pd->id->error($1->token.loc) << "priority number " << data << 
+			pd->id->warning($1->token.loc) << "priority number " << data <<
 					" overflows" << endl;
 			$$->priorityNum = 0;
 		}
 		else if ( errno == ERANGE && aug == LONG_MIN ) {
 			/* Priority number too large in the neg. Recover by using 0. */
-			pd->id->error($1->token.loc) << "priority number " << data << 
+			pd->id->warning($1->token.loc) << "priority number " << data <<
 					" underflows" << endl;
 			$$->priorityNum = 0;
 		}
@@ -1234,7 +1234,7 @@ factor_rep_num:
 		long rep = strtol( $1->data, 0, 10 );
 		if ( errno == ERANGE && rep == LONG_MAX ) {
 			// Repetition too large. Recover by returing repetition 1. */
-			pd->id->error($1->loc) << "repetition number " << $1->data << " overflows" << endl;
+			pd->id->warning($1->loc) << "repetition number " << $1->data << " overflows" << endl;
 			$$->rep = 1;
 		}
 		else {
@@ -1291,12 +1291,12 @@ factor:
 		GraphDictEl *gdNode = pd->graphDict.find( $1->data );
 		if ( gdNode == 0 ) {
 			/* Recover by returning null as the factor node. */
-			pd->id->error($1->loc) << "graph lookup of \"" << $1->data << "\" failed" << endl;
+			pd->id->warning($1->loc) << "graph lookup of \"" << $1->data << "\" failed" << endl;
 			$$->factor = 0;
 		}
 		else if ( gdNode->isInstance ) {
 			/* Recover by retuning null as the factor node. */
-			pd->id->error($1->loc) << "references to graph instantiations not allowed "
+			pd->id->warning($1->loc) << "references to graph instantiations not allowed "
 					"in expressions" << endl;
 			$$->factor = 0;
 		}
@@ -1894,7 +1894,7 @@ void Parser6::tryMachineDef( const InputLoc &loc, char *name,
 	}
 	else {
 		// Recover by ignoring the duplicate.
-		pd->id->error(loc) << "fsm \"" << name << "\" previously defined" << endl;
+		pd->id->warning(loc) << "fsm \"" << name << "\" previously defined" << endl;
 	}
 }
 
