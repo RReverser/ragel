@@ -56,7 +56,6 @@ end
 
 struct machine
 	Name: str
-	ActionParams: map<str, str>
 end
 
 global MachineMap: map<str, machine> = new map<str, machine>()
@@ -236,15 +235,7 @@ namespace ragel
 
 	def named_action_ref
 		[word] :Plain
-		{
-			if CurMachine->ActionParams->find( $lhs.word )
-				reject
-		}
 	|	[word `( opt_action_arg_list `)] :Args
-		{
-			if ! CurMachine->ActionParams->find( $lhs.word )
-				reject
-		}
 
 	def action_ref 
 		[named_action_ref] :NamedRef
@@ -446,10 +437,6 @@ namespace ragel
 	def action_spec
 		[`action word action_params action_block] :ActionSpecParams commit
 		{
-			# Track that this action has params so we can parse appropriately
-			# when reducing.
-			CurMachine->ActionParams->insert( $lhs.word, $lhs.word )
-
 			# Reset after parsing the block. 
 			GblActionParams = false
 		}
@@ -512,7 +499,6 @@ namespace ragel
 			{
 				Machine = new machine()
 				Machine->Name = $lhs.word
-				Machine->ActionParams = new map<str, str>()
 				MachineMap->insert( Machine->Name, Machine )
 			}
 
