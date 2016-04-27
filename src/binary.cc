@@ -577,6 +577,9 @@ void Binary::taNfaTargs()
 /* These need to mirror nfa targs. */
 void Binary::taNfaPushActions()
 {
+	if ( nfaPushActions.state == TableArray::GeneratePass && !redFsm->bAnyNfaPushes )
+		return;
+
 	nfaPushActions.start();
 
 	nfaPushActions.value( 0 );
@@ -594,6 +597,9 @@ void Binary::taNfaPushActions()
 
 void Binary::taNfaPopTrans()
 {
+	if ( nfaPushActions.state == TableArray::GeneratePass && !redFsm->bAnyNfaPops )
+		return;
+
 	nfaPopTrans.start();
 
 	nfaPopTrans.value( 0 );

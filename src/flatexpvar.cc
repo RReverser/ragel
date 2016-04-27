@@ -268,10 +268,12 @@ void FlatExpVar::writeData()
 	if ( redFsm->anyEofTrans() )
 		taEofTrans();
 
-	taNfaTargs();
-	taNfaOffsets();
-	taNfaPushActions();
-	taNfaPopTrans();
+	if ( redFsm->anyNfaStates() ) {
+		taNfaTargs();
+		taNfaOffsets();
+		taNfaPushActions();
+		taNfaPopTrans();
+	}
 
 	STATE_IDS();
 }

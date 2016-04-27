@@ -712,6 +712,9 @@ void Goto::taNfaTargs()
 /* These need to mirror nfa targs. */
 void Goto::taNfaPushActions()
 {
+	if ( nfaPushActions.state == TableArray::GeneratePass && !redFsm->bAnyNfaPushes )
+		return;
+
 	nfaPushActions.start();
 
 	nfaPushActions.value( 0 );
@@ -729,6 +732,9 @@ void Goto::taNfaPushActions()
 
 void Goto::taNfaPopTrans()
 {
+	if ( nfaPushActions.state == TableArray::GeneratePass && !redFsm->bAnyNfaPops )
+		return;
+
 	nfaPopTrans.start();
 
 	nfaPopTrans.value( 0 );

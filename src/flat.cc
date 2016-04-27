@@ -365,6 +365,9 @@ void Flat::taNfaTargs()
 /* These need to mirror nfa targs. */
 void Flat::taNfaPushActions()
 {
+	if ( nfaPushActions.state == TableArray::GeneratePass && !redFsm->bAnyNfaPushes )
+		return;
+
 	nfaPushActions.start();
 
 	nfaPushActions.value( 0 );
@@ -382,6 +385,9 @@ void Flat::taNfaPushActions()
 
 void Flat::taNfaPopTrans()
 {
+	if ( nfaPushActions.state == TableArray::GeneratePass && !redFsm->bAnyNfaPops )
+		return;
+	
 	nfaPopTrans.start();
 
 	nfaPopTrans.value( 0 );

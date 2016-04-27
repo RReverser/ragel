@@ -641,10 +641,12 @@ void IpGoto::writeData()
 {
 	STATE_IDS();
 
-	taNfaTargs();
-	taNfaOffsets();
-	taNfaPushActions();
-	taNfaPopTrans();
+	if ( redFsm->anyNfaStates() ) {
+		taNfaTargs();
+		taNfaOffsets();
+		taNfaPushActions();
+		taNfaPopTrans();
+	}
 }
 
 void IpGoto::writeExec()

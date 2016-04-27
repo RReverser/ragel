@@ -279,10 +279,12 @@ void BinaryLoopGoto::writeData()
 		taEofTransDirect();
 	}
 
-	taNfaTargs();
-	taNfaOffsets();
-	taNfaPushActions();
-	taNfaPopTrans();
+	if ( redFsm->anyNfaStates() ) {
+		taNfaTargs();
+		taNfaOffsets();
+		taNfaPushActions();
+		taNfaPopTrans();
+	}
 
 	STATE_IDS();
 }

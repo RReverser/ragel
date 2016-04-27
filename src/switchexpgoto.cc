@@ -211,10 +211,12 @@ void SwitchExpGoto::writeData()
 	if ( redFsm->anyEofActions() )
 		taEofActions();
 
-	taNfaTargs();
-	taNfaOffsets();
-	taNfaPushActions();
-	taNfaPopTrans();
+	if ( redFsm->anyNfaStates() ) {
+		taNfaTargs();
+		taNfaOffsets();
+		taNfaPushActions();
+		taNfaPopTrans();
+	}
 
 	STATE_IDS();
 }
