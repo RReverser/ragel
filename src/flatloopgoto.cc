@@ -393,10 +393,10 @@ void FlatLoopGoto::writeExec()
 	if ( outLabelUsed )
 		out << "} " << LABEL( "_out" ) << " { {}\n";
 
+	NFA_POP();
+
 	/* The entry loop. */
 	out << "}}\n";
-
-	NFA_POP();
 
 	out << "	}\n";
 }
