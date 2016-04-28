@@ -47,17 +47,24 @@ void Flat::setKeyType()
 
 void Flat::tableDataPass()
 {
-	taKeys();
-	taCharClass();
-	taFlatIndexOffset();
+	if ( redFsm->classMap != 0 ) {
+		taKeys();
+		taIndicies();
+		taCharClass();
+		taFlatIndexOffset();
+	}
 
-	taIndicies();
 	taIndexDefaults();
-	taTransCondSpaces();
-	if ( condSpaceList.length() > 0 )
+
+	if ( condSpaceList.length() > 0 ) {
+		taTransCondSpaces();
 		taTransOffsets();
+	}
+
 	taCondTargs();
-	taCondActions();
+
+	if ( redFsm->anyRegActions() )
+		taCondActions();
 
 	taToFromEofActions();
 	taNfa();
@@ -90,6 +97,12 @@ void Flat::genAnalysis()
 
 	/* Switch the tables over to the code gen mode. */
 	setTableState( TableArray::GeneratePass );
+}
+
+void Flat::writeData()
+{
+	tableDataPass();
+	STATE_IDS();
 }
 
 void Flat::taFlatIndexOffset()

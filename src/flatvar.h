@@ -14,7 +14,6 @@ struct FlatVar
 
 	void NFA_POP();
 	void LOCATE_TRANS();
-	void LOCATE_COND();
 
 	void GOTO( ostream &ret, int gotoDest, bool inFinish );
 	void GOTO_EXPR( ostream &ret, GenInlineItem *ilItem, bool inFinish );

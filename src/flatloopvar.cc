@@ -156,67 +156,6 @@ std::ostream &FlatLoopVar::ACTION_SWITCH()
 	return out;
 }
 
-
-void FlatLoopVar::writeData()
-{
-#if 0
-	/* If there are any transtion functions then output the array. If there
-	 * are none, don't bother emitting an empty array that won't be used. */
-	if ( redFsm->anyActions() )
-		taActions();
-
-	taKeyOffsets();
-	taKeys();
-	taSingleLens();
-	taRangeLens();
-	taIndexOffsets();
-
-	if ( useIndicies ) {
-		taIndicies();
-		taTransCondSpacesWi();
-		taTransOffsetsWi();
-		taTransLengthsWi();
-	}
-	else {
-		taTransCondSpaces();
-		taTransOffsets();
-		taTransLengths();
-	}
-
-	taCondKeys();
-
-	taCondTargs();
-	taCondActions();
-
-	taToFromEofActions();
-
-	STATE_IDS();
-#endif
-
-	/* If there are any transtion functions then output the array. If there
-	 * are none, don't bother emitting an empty array that won't be used. */
-	if ( redFsm->anyActions() )
-		taActions();
-
-	taKeys();
-	taCharClass();
-	taFlatIndexOffset();
-
-	taIndicies();
-	taIndexDefaults();
-	taTransCondSpaces();
-	if ( condSpaceList.length() > 0 )
-		taTransOffsets();
-	taCondTargs();
-	taCondActions();
-
-	taToFromEofActions();
-
-	taNfa();
-
-	STATE_IDS();
-}
-
 void FlatLoopVar::NFA_PUSH_ACTION( RedNfaTarg *targ )
 {
 	int act = 0;

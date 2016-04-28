@@ -38,6 +38,8 @@ public:
 	Flat( const CodeGenArgs &args );
 
 	virtual ~Flat() { }
+	
+	void writeData();
 
 protected:
 	TableArray keys;

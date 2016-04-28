@@ -189,27 +189,6 @@ std::ostream &FlatExpVar::ACTION_SWITCH()
 	return out;
 }
 
-void FlatExpVar::writeData()
-{
-	taKeys();
-	taCharClass();
-	taFlatIndexOffset();
-
-	taIndicies();
-	taIndexDefaults();
-	taTransCondSpaces();
-	if ( condSpaceList.length() > 0 )
-		taTransOffsets();
-	taCondTargs();
-	taCondActions();
-
-	taToFromEofActions();
-
-	taNfa();
-
-	STATE_IDS();
-}
-
 void FlatExpVar::writeExec()
 {
 	testEofUsed = false;

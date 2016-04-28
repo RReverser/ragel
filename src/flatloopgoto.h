@@ -53,7 +53,6 @@ public:
 
 	void tableDataPass();
 
-	virtual void writeData();
 	virtual void writeExec();
 };
 

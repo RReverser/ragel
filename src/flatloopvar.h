@@ -41,7 +41,6 @@ public:
 	void calcIndexSize();
 	void tableDataPass();
 
-	virtual void writeData();
 	virtual void writeExec();
 
 	virtual void TO_STATE_ACTION( RedStateAp *state );

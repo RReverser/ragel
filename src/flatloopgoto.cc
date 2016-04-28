@@ -98,32 +98,6 @@ std::ostream &FlatLoopGoto::ACTION_SWITCH()
 	return out;
 }
 
-void FlatLoopGoto::writeData()
-{
-	/* If there are any transtion functions then output the array. If there
-	 * are none, don't bother emitting an empty array that won't be used. */
-	if ( redFsm->anyActions() )
-		taActions();
-
-	taKeys();
-	taCharClass();
-	taFlatIndexOffset();
-
-	taIndicies();
-	taIndexDefaults();
-	taTransCondSpaces();
-	if ( condSpaceList.length() > 0 )
-		taTransOffsets();
-	taCondTargs();
-	taCondActions();
-
-	taToFromEofActions();
-
-	taNfa();
-
-	STATE_IDS();
-}
-
 void FlatLoopGoto::writeExec()
 {
 	testEofUsed = false;

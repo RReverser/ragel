@@ -38,7 +38,6 @@ public:
 	FlatExpGoto( const CodeGenArgs &args ) 
 		: Flat(args) {}
 
-	virtual void writeData();
 	virtual void writeExec();
 
 protected:

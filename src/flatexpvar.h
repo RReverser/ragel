@@ -37,7 +37,6 @@ public:
 
 	void calcIndexSize();
 
-	virtual void writeData();
 	virtual void writeExec();
 
 protected:
