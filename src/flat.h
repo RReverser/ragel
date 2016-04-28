@@ -72,6 +72,8 @@ protected:
 	void taNfaPopTrans();
 
 	void setKeyType();
+	virtual void tableDataPass();
+	void genAnalysis();
 
 	std::ostream &INDICIES();
 	std::ostream &TO_STATE_ACTIONS();

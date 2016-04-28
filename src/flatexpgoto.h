@@ -38,9 +38,6 @@ public:
 	FlatExpGoto( const CodeGenArgs &args ) 
 		: Flat(args) {}
 
-	void tableDataPass();
-
-	virtual void genAnalysis();
 	virtual void writeData();
 	virtual void writeExec();
 

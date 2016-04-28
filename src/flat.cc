@@ -45,6 +45,54 @@ void Flat::setKeyType()
 	keys.isSigned = keyOps->isSigned;
 }
 
+void Flat::tableDataPass()
+{
+	taKeys();
+	taCharClass();
+	taFlatIndexOffset();
+
+	taIndicies();
+	taIndexDefaults();
+	taTransCondSpaces();
+	if ( condSpaceList.length() > 0 )
+		taTransOffsets();
+	taCondTargs();
+	taCondActions();
+
+	taToFromEofActions();
+	taEofTrans();
+	taNfa();
+}
+
+void Flat::genAnalysis()
+{
+	redFsm->sortByStateId();
+
+	/* Choose default transitions and the single transition. */
+	redFsm->chooseDefaultSpan();
+		
+	/* Do flat expand. */
+	redFsm->makeFlatClass();
+
+	/* If any errors have occured in the input file then don't write anything. */
+	if ( id->errorCount > 0 )
+		return;
+
+	/* Anlayze Machine will find the final action reference counts, among other
+	 * things. We will use these in reporting the usage of fsm directives in
+	 * action code. */
+	analyzeMachine();
+
+	setKeyType();
+
+	/* Run the analysis pass over the table data. */
+	setTableState( TableArray::AnalyzePass );
+	tableDataPass();
+
+	/* Switch the tables over to the code gen mode. */
+	setTableState( TableArray::GeneratePass );
+}
+
 void Flat::taFlatIndexOffset()
 {
 	flatIndexOffset.start();

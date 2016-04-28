@@ -33,9 +33,6 @@ class BinaryExpGoto : public Binary
 public:
 	BinaryExpGoto( const CodeGenArgs &args );
 
-	void tableDataPass();
-
-	virtual void genAnalysis();
 	virtual void writeData();
 	virtual void writeExec();
 

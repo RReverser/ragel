@@ -34,59 +34,8 @@ BinaryLoopGoto::BinaryLoopGoto( const CodeGenArgs &args )
 void BinaryLoopGoto::tableDataPass()
 {
 	taActions();
-	taKeyOffsets();
-	taSingleLens();
-	taRangeLens();
-	taIndexOffsets();
-
-	taIndiciesAndTrans();
-
-	taCondTargs();
-	taCondActions();
-
-	taToFromEofActions();
-
-	taEofTransDirect();
-	taEofTransIndexed();
-
-	taKeys();
-	taCondKeys();
-
-	taNfa();
+	Binary::tableDataPass();
 }
-
-void BinaryLoopGoto::genAnalysis()
-{
-	redFsm->sortByStateId();
-
-	/* Choose default transitions and the single transition. */
-	redFsm->chooseDefaultSpan();
-		
-	/* Choose the singles. */
-	redFsm->moveSelectTransToSingle();
-
-	/* If any errors have occured in the input file then don't write anything. */
-	if ( id->errorCount > 0 )
-		return;
-
-	/* Anlayze Machine will find the final action reference counts, among other
-	 * things. We will use these in reporting the usage of fsm directives in
-	 * action code. */
-	analyzeMachine();
-
-	setKeyType();
-
-	/* Run the analysis pass over the table data. */
-	setTableState( TableArray::AnalyzePass );
-	tableDataPass();
-
-	/* Determine if we should use indicies. */
-	calcIndexSize();
-
-	/* Switch the tables over to the code gen mode. */
-	setTableState( TableArray::GeneratePass );
-}
-
 
 void BinaryLoopGoto::COND_ACTION( RedCondPair *cond )
 {

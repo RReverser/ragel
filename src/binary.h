@@ -96,6 +96,8 @@ protected:
 
 	void calcIndexSize();
 	void setKeyType();
+	virtual void tableDataPass();
+	void genAnalysis();
 
 	void LOCATE_TRANS();
 	void LOCATE_COND();

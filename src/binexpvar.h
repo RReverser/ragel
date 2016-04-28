@@ -35,9 +35,6 @@ class BinaryExpVar
 public:
 	BinaryExpVar( const CodeGenArgs &args );
 
-	void tableDataPass();
-
-	virtual void genAnalysis();
 	virtual void writeData();
 	virtual void writeExec();
 
