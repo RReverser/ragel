@@ -214,15 +214,14 @@ void Binary::taKeys()
 
 void Binary::taIndiciesAndTrans()
 {
-	if ( tableState != TableArray::GeneratePass || useIndicies ) {
+	if ( useIndicies ) {
 		taIndicies();
 #if 0
 		taTransCondSpacesWi();
 		taTransOffsetsWi();
 		taTransLengthsWi();
 #endif
-	}
-	if ( tableState != TableArray::GeneratePass || !useIndicies ) {
+	} else {
 		if ( condSpaceList.length() > 0 )
 			taTransCondSpaces();
 		taTransOffsets();

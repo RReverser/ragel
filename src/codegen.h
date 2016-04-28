@@ -140,12 +140,12 @@ public:
 	virtual void writeData(); 
 	virtual void statsSummary();
 
+	virtual void tableDataPass() = 0;
+
 protected:
 	friend class TableArray;
 	typedef Vector<TableArray*> ArrayVector;
 	ArrayVector arrayVector;
-
-	TableArray::State tableState;
 
 	TableArray actions;
 
