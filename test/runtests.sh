@@ -410,7 +410,7 @@ function run_options()
 	root=${root%.rl};
 
 	# maybe translated to multiple targets, re-read each lang.
-	lang=`sed '/@LANG:/{s/^.*: *//;s/ *$//;p};d' $translated`
+	lang=`sed '/@LANG:/{s/^.*: *//;s/ *$//;p;};d' $translated`
 
 	lang_opts $lang
 
@@ -521,10 +521,10 @@ function run_translate()
 	case_rl=${root}.rl
 
 	# Create the expected output.
-	sed '1,/^#\+ * OUTPUT #\+/d;' $test_case > $wk/$expected_out
+	sed -E '1,/^#+ * OUTPUT #+/d;' $test_case > $wk/$expected_out
 
 	# internal consistency check?
-	internal=`sed '/@INTERNAL:/{s/^.*: *//;s/ *$//;p};d' $test_case`
+	internal=`sed '/@INTERNAL:/{s/^.*: *//;s/ *$//;p;};d' $test_case`
 	if [ -n "$internal" ]; then
 		run_internal $test_case
 	else 
@@ -578,7 +578,7 @@ function run_translate()
 				cases="$cases $wk/$targ"
 			done
 		else
-			sed '/^#\+ * OUTPUT #\+/,$d' $test_case > $wk/$case_rl
+			sed -E '/^#+ * OUTPUT #+/,$d' $test_case > $wk/$case_rl
 			cases=$wk/$case_rl
 		fi
 
