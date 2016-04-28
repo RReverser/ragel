@@ -190,11 +190,6 @@ void FlatLoopVar::writeData()
 
 	taToFromEofActions();
 
-	if ( redFsm->anyEofTrans() ) {
-		taEofTransIndexed();
-		taEofTransDirect();
-	}
-
 	STATE_IDS();
 #endif
 
@@ -216,9 +211,6 @@ void FlatLoopVar::writeData()
 	taCondActions();
 
 	taToFromEofActions();
-
-	if ( redFsm->anyEofTrans() )
-		taEofTrans();
 
 	taNfa();
 

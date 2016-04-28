@@ -8,15 +8,15 @@
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
  *  (at your option) any later version.
- * 
+ *
  *  Ragel is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with Ragel; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 #include "ragel.h"
@@ -24,7 +24,7 @@
 #include "redfsm.h"
 #include "gendata.h"
 
-Flat::Flat( const CodeGenArgs &args ) 
+Flat::Flat( const CodeGenArgs &args )
 :
 	CodeGen( args ),
 	keys(             "trans_keys",          *this ),
@@ -60,7 +60,6 @@ void Flat::tableDataPass()
 	taCondActions();
 
 	taToFromEofActions();
-	taEofTrans();
 	taNfa();
 }
 
@@ -70,7 +69,7 @@ void Flat::genAnalysis()
 
 	/* Choose default transitions and the single transition. */
 	redFsm->chooseDefaultSpan();
-		
+
 	/* Do flat expand. */
 	redFsm->makeFlatClass();
 
@@ -101,7 +100,7 @@ void Flat::taFlatIndexOffset()
 	for ( RedStateList::Iter st = redFsm->stateList; st.lte(); st++ ) {
 		/* Write the index offset. */
 		flatIndexOffset.value( curIndOffset );
-		
+
 		/* Move the index offset ahead. */
 		if ( st->transList != 0 )
 			curIndOffset += ( st->high - st->low + 1 );
@@ -530,7 +529,7 @@ void Flat::NFA_POP()
 			;
 
 		if ( redFsm->bAnyNfaPops ) {
-			out << 
+			out <<
 				"		int _pop_test = 1;\n"
 				"		switch ( " << ARR_REF( nfaPopTrans ) <<
 							"[nfa_bp[nfa_len].popTrans] ) {\n";
@@ -591,7 +590,7 @@ void Flat::NFA_POP()
 				"		goto _resume;\n";
 		}
 
-		out << 
+		out <<
 			"		goto _out;\n"
 			"	}\n";
 	}
@@ -677,16 +676,16 @@ void Flat::LOCATE_TRANS()
 					out << " ) _cpc += " << condValOffset << ";\n";
 				}
 
-				out << 
+				out <<
 					"	" << CEND() << "}\n";
 			}
 		}
 
-		out << 
+		out <<
 			"	}\n"
 			"	_cond += " << CAST( UINT() ) << "_cpc;\n";
 	}
-	
+
 	out <<
 		"	goto _match_cond;\n"
 	;
@@ -736,7 +735,7 @@ void Flat::CALL( ostream &ret, int callDest, int targState, bool inFinish )
 		ret << CLOSE_HOST_BLOCK();
 	}
 
-	ret << STACK() << "[" << TOP() << "] = " << vCS() << "; " << TOP() << " += 1;" << vCS() << " = " << 
+	ret << STACK() << "[" << TOP() << "] = " << vCS() << "; " << TOP() << " += 1;" << vCS() << " = " <<
 			callDest << "; " << "goto _again;" << CLOSE_GEN_BLOCK();
 }
 
@@ -752,7 +751,7 @@ void Flat::NCALL( ostream &ret, int callDest, int targState, bool inFinish )
 	}
 
 	ret << STACK() << "[" << TOP() << "] = " << vCS() << "; " <<
-			TOP() << " += 1;" << vCS() << " = " << 
+			TOP() << " += 1;" << vCS() << " = " <<
 			callDest << "; " << CLOSE_GEN_BLOCK();
 }
 

@@ -1077,6 +1077,8 @@ void CodeGen::taToFromEofActions()
 		taFromStateActions();
 	if ( tableState != TableArray::GeneratePass || redFsm->anyEofActions() )
 		taEofActions();
+	if ( tableState != TableArray::GeneratePass || redFsm->anyEofTrans() )
+		taEofTrans();
 }
 
 void CodeGen::setTableState( TableArray::State state )

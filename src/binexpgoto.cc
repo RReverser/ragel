@@ -189,11 +189,6 @@ void BinaryExpGoto::writeData()
 
 	taToFromEofActions();
 
-	if ( redFsm->anyEofTrans() ) {
-		taEofTransIndexed();
-		taEofTransDirect();
-	}
-
 	taNfa();
 
 	STATE_IDS();

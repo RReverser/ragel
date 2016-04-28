@@ -166,6 +166,7 @@ protected:
 	virtual void taToStateActions() = 0;
 	virtual void taFromStateActions() = 0;
 	virtual void taEofActions() = 0;
+	virtual void taEofTrans() = 0;
 
 	void taNfa();
 	virtual void taNfaTargs() = 0;

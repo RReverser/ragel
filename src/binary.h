@@ -45,6 +45,8 @@ private:
 	void taTransCondSpaces();
 	void taTransOffsets();
 	void taTransLengths();
+	void taEofTransDirect();
+	void taEofTransIndexed();
 
 protected:
 	TableArray keyOffsets;
@@ -52,9 +54,11 @@ protected:
 	TableArray rangeLens;
 	TableArray indexOffsets;
 	TableArray indicies;
+#if 0
 	TableArray transCondSpacesWi;
 	TableArray transOffsetsWi;
 	TableArray transLengthsWi;
+#endif
 	TableArray transCondSpaces;
 	TableArray transOffsets;
 	TableArray transLengths;
@@ -71,7 +75,9 @@ protected:
 	std::ostream &INDEX_OFFSETS();
 	std::ostream &SINGLE_LENS();
 	std::ostream &RANGE_LENS();
+#if 0
 	std::ostream &TRANS_TARGS_WI();
+#endif
 	std::ostream &ACTIONS_ARRAY();
 
 	void taKeyOffsets();
@@ -84,8 +90,7 @@ protected:
 	void taToStateActions();
 	void taFromStateActions();
 	void taEofActions();
-	void taEofTransDirect();
-	void taEofTransIndexed();
+	void taEofTrans();
 	void taKeys();
 	void taActions();
 	void taCondKeys();

@@ -34,9 +34,11 @@ Binary::Binary( const CodeGenArgs &args )
 	rangeLens(          "range_lengths",         *this ),
 	indexOffsets(       "index_offsets",         *this ),
 	indicies(           "indicies",              *this ),
+#if 0
 	transCondSpacesWi(  "trans_cond_spaces_wi",  *this ),
 	transOffsetsWi(     "trans_offsets_wi",      *this ),
 	transLengthsWi(     "trans_lengths_wi",      *this ),
+#endif
 	transCondSpaces(    "trans_cond_spaces",     *this ),
 	transOffsets(       "trans_offsets",         *this ),
 	transLengths(       "trans_lengths",         *this ),
@@ -214,12 +216,15 @@ void Binary::taIndiciesAndTrans()
 {
 	if ( tableState != TableArray::GeneratePass || useIndicies ) {
 		taIndicies();
+#if 0
 		taTransCondSpacesWi();
 		taTransOffsetsWi();
 		taTransLengthsWi();
+#endif
 	}
 	if ( tableState != TableArray::GeneratePass || !useIndicies ) {
-		taTransCondSpaces();
+		if ( condSpaceList.length() > 0 )
+			taTransCondSpaces();
 		taTransOffsets();
 		taTransLengths();
 	}
@@ -368,6 +373,7 @@ void Binary::taTransLengths()
 	transLengths.finish();
 }
 
+#if 0
 void Binary::taTransCondSpacesWi()
 {
 	transCondSpacesWi.start();
@@ -413,6 +419,7 @@ void Binary::taTransLengthsWi()
 
 	transLengthsWi.finish();
 }
+#endif
 
 void Binary::taCondKeys()
 {
@@ -510,6 +517,9 @@ void Binary::taCondTargs()
 
 void Binary::taCondActions()
 {
+	if ( !redFsm->anyRegActions() )
+		return;
+
 	condActions.start();
 
 	for ( RedStateList::Iter st = redFsm->stateList; st.lte(); st++ ) {
@@ -649,6 +659,12 @@ void Binary::calcIndexSize()
 	useIndicies = false;
 }
 
+void Binary::taEofTrans()
+{
+	taEofTransIndexed();
+	taEofTransDirect();
+}
+
 void Binary::tableDataPass()
 {
 	taKeyOffsets();
@@ -662,9 +678,6 @@ void Binary::tableDataPass()
 	taCondActions();
 
 	taToFromEofActions();
-
-	taEofTransDirect();
-	taEofTransIndexed();
 
 	taKeys();
 	taCondKeys();

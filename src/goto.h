@@ -51,6 +51,7 @@ public:
 	void taToStateActions();
 	void taFromStateActions();
 	void taEofActions();
+	void taEofTrans();
 	void taNfaTargs();
 	void taNfaOffsets();
 	void taNfaPushActions();

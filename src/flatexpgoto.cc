@@ -173,9 +173,6 @@ void FlatExpGoto::writeData()
 
 	taToFromEofActions();
 
-	if ( redFsm->anyEofTrans() )
-		taEofTrans();
-
 	taNfa();
 
 	STATE_IDS();

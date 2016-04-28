@@ -643,6 +643,10 @@ void Goto::taEofActions()
 	eofActions.finish();
 }
 
+void Goto::taEofTrans() {
+	/* Intentionally empty as it's handled differently in goto modes. */
+}
+
 void Goto::taNfaOffsets()
 {
 	nfaOffsets.start();
