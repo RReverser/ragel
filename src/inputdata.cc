@@ -49,7 +49,7 @@ InputData::~InputData()
 	for ( Vector<const char**>::Iter fns = streamFileNames; fns.lte(); fns++ ) {
 		const char **ptr = *fns;
 		while ( *ptr != 0 ) {
-			::free( (void*)*ptr );
+			// ::free( (void*)*ptr );
 			ptr += 1;
 		}
 		free( (void*) *fns );
