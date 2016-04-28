@@ -40,14 +40,9 @@ void FlatExpGoto::tableDataPass()
 	taCondTargs();
 	taCondActions();
 
-	taToStateActions();
-	taFromStateActions();
-	taEofActions();
+	taToFromEofActions();
 	taEofTrans();
-	taNfaTargs();
-	taNfaOffsets();
-	taNfaPushActions();
-	taNfaPopTrans();
+	taNfa();
 }
 
 void FlatExpGoto::genAnalysis()
@@ -224,24 +219,12 @@ void FlatExpGoto::writeData()
 	taCondTargs();
 	taCondActions();
 
-	if ( redFsm->anyToStateActions() )
-		taToStateActions();
-
-	if ( redFsm->anyFromStateActions() )
-		taFromStateActions();
-
-	if ( redFsm->anyEofActions() )
-		taEofActions();
+	taToFromEofActions();
 
 	if ( redFsm->anyEofTrans() )
 		taEofTrans();
 
-	if ( redFsm->anyNfaStates() ) {
-		taNfaTargs();
-		taNfaOffsets();
-		taNfaPushActions();
-		taNfaPopTrans();
-	}
+	taNfa();
 
 	STATE_IDS();
 }

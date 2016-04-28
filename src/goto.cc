@@ -31,25 +31,8 @@ using std::ostringstream;
 
 Goto::Goto( const CodeGenArgs &args ) 
 :
-	CodeGen( args ),
-	actions(           "actions",             *this ),
-	toStateActions(    "to_state_actions",    *this ),
-	fromStateActions(  "from_state_actions",  *this ),
-	eofActions(        "eof_actions",         *this ),
-	nfaTargs(          "nfa_targs",           *this ),
-	nfaOffsets(        "nfa_offsets",         *this ),
-	nfaPushActions(    "nfa_push_actions",    *this ),
-	nfaPopTrans(       "nfa_pop_trans",        *this )
+	CodeGen( args )
 {}
-
-void Goto::setTableState( TableArray::State state )
-{
-	for ( ArrayVector::Iter i = arrayVector; i.lte(); i++ ) {
-		TableArray *tableArray = *i;
-		tableArray->setState( state );
-	}
-}
-
 
 /* Emit the goto to take for a given transition. */
 std::ostream &Goto::COND_GOTO( RedCondPair *cond, int level )
@@ -712,9 +695,6 @@ void Goto::taNfaTargs()
 /* These need to mirror nfa targs. */
 void Goto::taNfaPushActions()
 {
-	if ( nfaPushActions.state == TableArray::GeneratePass && !redFsm->bAnyNfaPushes )
-		return;
-
 	nfaPushActions.start();
 
 	nfaPushActions.value( 0 );
@@ -732,9 +712,6 @@ void Goto::taNfaPushActions()
 
 void Goto::taNfaPopTrans()
 {
-	if ( nfaPushActions.state == TableArray::GeneratePass && !redFsm->bAnyNfaPops )
-		return;
-
 	nfaPopTrans.start();
 
 	nfaPopTrans.value( 0 );

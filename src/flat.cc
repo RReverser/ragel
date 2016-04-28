@@ -27,7 +27,6 @@
 Flat::Flat( const CodeGenArgs &args ) 
 :
 	CodeGen( args ),
-	actions(          "actions",             *this ),
 	keys(             "trans_keys",          *this ),
 	charClass(        "char_class",          *this ),
 	flatIndexOffset(  "index_offsets",       *this ),
@@ -37,28 +36,13 @@ Flat::Flat( const CodeGenArgs &args )
 	transOffsets(     "trans_offsets",       *this ),
 	condTargs(        "cond_targs",          *this ),
 	condActions(      "cond_actions",        *this ),
-	toStateActions(   "to_state_actions",    *this ),
-	fromStateActions( "from_state_actions",  *this ),
-	eofActions(       "eof_actions",         *this ),
-	eofTrans(         "eof_trans",           *this ),
-	nfaTargs(         "nfa_targs",           *this ),
-	nfaOffsets(       "nfa_offsets",         *this ),
-	nfaPushActions(   "nfa_push_actions",    *this ),
-	nfaPopTrans(      "nfa_pop_trans",       *this )
+	eofTrans(         "eof_trans",           *this )
 {}
 
 void Flat::setKeyType()
 {
 	keys.setType( ALPH_TYPE(), keyOps->alphType->size, keyOps->alphType->isChar );
 	keys.isSigned = keyOps->isSigned;
-}
-
-void Flat::setTableState( TableArray::State state )
-{
-	for ( ArrayVector::Iter i = arrayVector; i.lte(); i++ ) {
-		TableArray *tableArray = *i;
-		tableArray->setState( state );
-	}
 }
 
 void Flat::taFlatIndexOffset()
@@ -365,9 +349,6 @@ void Flat::taNfaTargs()
 /* These need to mirror nfa targs. */
 void Flat::taNfaPushActions()
 {
-	if ( nfaPushActions.state == TableArray::GeneratePass && !redFsm->bAnyNfaPushes )
-		return;
-
 	nfaPushActions.start();
 
 	nfaPushActions.value( 0 );
@@ -385,9 +366,6 @@ void Flat::taNfaPushActions()
 
 void Flat::taNfaPopTrans()
 {
-	if ( nfaPushActions.state == TableArray::GeneratePass && !redFsm->bAnyNfaPops )
-		return;
-	
 	nfaPopTrans.start();
 
 	nfaPopTrans.value( 0 );

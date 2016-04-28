@@ -33,10 +33,7 @@ using std::ostringstream;
 
 void IpGoto::tableDataPass()
 {
-	taNfaTargs();
-	taNfaOffsets();
-	taNfaPushActions();
-	taNfaPopTrans();
+	taNfa();
 }
 
 void IpGoto::genAnalysis()
@@ -641,12 +638,7 @@ void IpGoto::writeData()
 {
 	STATE_IDS();
 
-	if ( redFsm->anyNfaStates() ) {
-		taNfaTargs();
-		taNfaOffsets();
-		taNfaPushActions();
-		taNfaPopTrans();
-	}
+	taNfa();
 }
 
 void IpGoto::writeExec()

@@ -42,18 +42,10 @@ Binary::Binary( const CodeGenArgs &args )
 	transLengths(       "trans_lengths",         *this ),
 	condTargs(          "cond_targs",            *this ),
 	condActions(        "cond_actions",          *this ),
-	toStateActions(     "to_state_actions",      *this ),
-	fromStateActions(   "from_state_actions",    *this ),
-	eofActions(         "eof_actions",           *this ),
 	eofTransDirect(     "eof_trans_direct",      *this ),
 	eofTransIndexed(    "eof_trans_indexed",     *this ),
-	actions(            "actions",               *this ),
 	keys(               "trans_keys",            *this ),
-	condKeys(           "cond_keys",             *this ),
-	nfaTargs(           "nfa_targs",             *this ),
-	nfaOffsets(         "nfa_offsets",           *this ),
-	nfaPushActions(     "nfa_push_actions",      *this ),
-	nfaPopTrans(        "nfa_pop_trans",         *this )
+	condKeys(           "cond_keys",             *this )
 {
 }
 
@@ -61,14 +53,6 @@ void Binary::setKeyType()
 {
 	keys.setType( ALPH_TYPE(), keyOps->alphType->size, keyOps->alphType->isChar );
 	keys.isSigned = keyOps->isSigned;
-}
-
-void Binary::setTableState( TableArray::State state )
-{
-	for ( ArrayVector::Iter i = arrayVector; i.lte(); i++ ) {
-		TableArray *tableArray = *i;
-		tableArray->setState( state );
-	}
 }
 
 void Binary::taKeyOffsets()
@@ -224,6 +208,21 @@ void Binary::taKeys()
 	}
 
 	keys.finish();
+}
+
+void Binary::taIndiciesAndTrans()
+{
+	if ( tableState != TableArray::GeneratePass || useIndicies ) {
+		taIndicies();
+		taTransCondSpacesWi();
+		taTransOffsetsWi();
+		taTransLengthsWi();
+	}
+	if ( tableState != TableArray::GeneratePass || !useIndicies ) {
+		taTransCondSpaces();
+		taTransOffsets();
+		taTransLengths();
+	}
 }
 
 void Binary::taIndicies()
@@ -577,9 +576,6 @@ void Binary::taNfaTargs()
 /* These need to mirror nfa targs. */
 void Binary::taNfaPushActions()
 {
-	if ( nfaPushActions.state == TableArray::GeneratePass && !redFsm->bAnyNfaPushes )
-		return;
-
 	nfaPushActions.start();
 
 	nfaPushActions.value( 0 );
@@ -597,9 +593,6 @@ void Binary::taNfaPushActions()
 
 void Binary::taNfaPopTrans()
 {
-	if ( nfaPushActions.state == TableArray::GeneratePass && !redFsm->bAnyNfaPops )
-		return;
-
 	nfaPopTrans.start();
 
 	nfaPopTrans.value( 0 );
@@ -637,6 +630,24 @@ void Binary::taNfaOffsets()
 	nfaOffsets.finish();
 }
 
+/* Determine if we should use indicies or not. */
+void Binary::calcIndexSize()
+{
+//	long long sizeWithInds =
+//		indicies.size() +
+//		transCondSpacesWi.size() +
+//		transOffsetsWi.size() +
+//		transLengthsWi.size();
+
+//	long long sizeWithoutInds =
+//		transCondSpaces.size() +
+//		transOffsets.size() +
+//		transLengths.size();
+
+	///* If using indicies reduces the size, use them. */
+	//useIndicies = sizeWithInds < sizeWithoutInds;
+	useIndicies = false;
+}
 
 /* Write out the array of actions. */
 std::ostream &Binary::ACTIONS_ARRAY()

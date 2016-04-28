@@ -144,9 +144,37 @@ protected:
 	typedef Vector<TableArray*> ArrayVector;
 	ArrayVector arrayVector;
 
+	TableArray::State tableState;
+
+	TableArray actions;
+
+	TableArray toStateActions;
+	TableArray fromStateActions;
+	TableArray eofActions;
+
+	TableArray nfaTargs;
+	TableArray nfaOffsets;
+	TableArray nfaPushActions;
+	TableArray nfaPopTrans;
+
 	string FSM_NAME();
 	string START_STATE_ID();
+
 	void taActions();
+
+	void taToFromEofActions();
+	virtual void taToStateActions() = 0;
+	virtual void taFromStateActions() = 0;
+	virtual void taEofActions() = 0;
+
+	void taNfa();
+	virtual void taNfaTargs() = 0;
+	virtual void taNfaOffsets() = 0;
+	virtual void taNfaPushActions() = 0;
+	virtual void taNfaPopTrans() = 0;
+
+	void setTableState( TableArray::State state );
+
 	string TABS( int level );
 	string KEY( Key key );
 	string LDIR_PATH( char *path );

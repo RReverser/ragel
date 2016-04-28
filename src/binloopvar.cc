@@ -31,25 +31,6 @@ BinaryLoopVar::BinaryLoopVar( const CodeGenArgs &args )
 	BinaryVar( args )
 {}
 
-/* Determine if we should use indicies or not. */
-void BinaryLoopVar::calcIndexSize()
-{
-//	long long sizeWithInds =
-//		indicies.size() +
-//		transCondSpacesWi.size() +
-//		transOffsetsWi.size() +
-//		transLengthsWi.size();
-
-//	long long sizeWithoutInds =
-//		transCondSpaces.size() +
-//		transOffsets.size() +
-//		transLengths.size();
-
-	///* If using indicies reduces the size, use them. */
-	//useIndicies = sizeWithInds < sizeWithoutInds;
-	useIndicies = false;
-}
-
 void BinaryLoopVar::tableDataPass()
 {
 	taActions();
@@ -57,22 +38,13 @@ void BinaryLoopVar::tableDataPass()
 	taSingleLens();
 	taRangeLens();
 	taIndexOffsets();
-	taIndicies();
 
-	taTransCondSpacesWi();
-	taTransOffsetsWi();
-	taTransLengthsWi();
-
-	taTransCondSpaces();
-	taTransOffsets();
-	taTransLengths();
+	taIndiciesAndTrans();
 
 	taCondTargs();
 	taCondActions();
 
-	taToStateActions();
-	taFromStateActions();
-	taEofActions();
+	taToFromEofActions();
 
 	taEofTransDirect();
 	taEofTransIndexed();
@@ -80,10 +52,7 @@ void BinaryLoopVar::tableDataPass()
 	taKeys();
 	taCondKeys();
 
-	taNfaTargs();
-	taNfaOffsets();
-	taNfaPushActions();
-	taNfaPopTrans();
+	taNfa();
 }
 
 void BinaryLoopVar::genAnalysis()
@@ -230,43 +199,21 @@ void BinaryLoopVar::writeData()
 	taRangeLens();
 	taIndexOffsets();
 
-	if ( useIndicies ) {
-		taIndicies();
-		taTransCondSpacesWi();
-		taTransOffsetsWi();
-		taTransLengthsWi();
-	}
-	else {
-		taTransCondSpaces();
-		taTransOffsets();
-		taTransLengths();
-	}
+	taIndiciesAndTrans();
 
 	taCondKeys();
 
 	taCondTargs();
 	taCondActions();
-
-	if ( redFsm->anyToStateActions() )
-		taToStateActions();
-
-	if ( redFsm->anyFromStateActions() )
-		taFromStateActions();
-
-	if ( redFsm->anyEofActions() )
-		taEofActions();
+	
+	taToFromEofActions();
 
 	if ( redFsm->anyEofTrans() ) {
 		taEofTransIndexed();
 		taEofTransDirect();
 	}
 
-	if ( redFsm->anyNfaStates() ) {
-		taNfaTargs();
-		taNfaOffsets();
-		taNfaPushActions();
-		taNfaPopTrans();
-	}
+	taNfa();
 
 	STATE_IDS();
 }

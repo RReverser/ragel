@@ -327,6 +327,15 @@ void TableArray::finish()
 CodeGen::CodeGen( const CodeGenArgs &args )
 :
 	CodeGenData( args ),
+	actions(           "actions",             *this ),
+	toStateActions(    "to_state_actions",    *this ),
+	fromStateActions(  "from_state_actions",  *this ),
+	eofActions(        "eof_actions",         *this ),
+	nfaTargs(          "nfa_targs",           *this ),
+	nfaOffsets(        "nfa_offsets",         *this ),
+	nfaPushActions(    "nfa_push_actions",    *this ),
+	nfaPopTrans(       "nfa_pop_trans",       *this ),
+	tableState( TableArray::InitialState ),
 	tableData( 0 ),
 	backend( args.id->backend ),
 	stringTables( args.id->stringTables )
@@ -1045,5 +1054,36 @@ void CodeGen::writeExports()
 				DATA_PREFIX() + "ex_" + ex->name, KEY(ex->key) ) << "\n";
 		}
 		out << "\n";
+	}
+}
+
+void CodeGen::taNfa()
+{
+	if ( tableState != TableArray::GeneratePass || redFsm->anyNfaStates() ) {
+		taNfaTargs();
+		taNfaOffsets();
+		if ( tableState != TableArray::GeneratePass || redFsm->bAnyNfaPushes )
+			taNfaPushActions();
+		if ( tableState != TableArray::GeneratePass || redFsm->bAnyNfaPops )
+			taNfaPopTrans();
+	}
+}
+
+void CodeGen::taToFromEofActions()
+{
+	if ( tableState != TableArray::GeneratePass || redFsm->anyToStateActions() )
+		taToStateActions();
+	if ( tableState != TableArray::GeneratePass || redFsm->anyFromStateActions() )
+		taFromStateActions();
+	if ( tableState != TableArray::GeneratePass || redFsm->anyEofActions() )
+		taEofActions();
+}
+
+void CodeGen::setTableState( TableArray::State state )
+{
+	tableState = state;
+	for ( ArrayVector::Iter i = arrayVector; i.lte(); i++ ) {
+		TableArray *tableArray = *i;
+		tableArray->setState( state );
 	}
 }

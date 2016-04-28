@@ -38,7 +38,6 @@ class BinaryLoopGoto
 public:
 	BinaryLoopGoto( const CodeGenArgs &args );
 
-	void calcIndexSize();
 	void tableDataPass();
 
 	virtual void genAnalysis();

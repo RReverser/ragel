@@ -47,15 +47,6 @@ public:
 	std::ostream &TRANSITIONS();
 	std::ostream &FINISH_CASES();
 
-	TableArray actions;
-	TableArray toStateActions;
-	TableArray fromStateActions;
-	TableArray eofActions;
-	TableArray nfaTargs;
-	TableArray nfaOffsets;
-	TableArray nfaPushActions;
-	TableArray nfaPopTrans;
-
 	void taActions();
 	void taToStateActions();
 	void taFromStateActions();
@@ -89,8 +80,6 @@ public:
 	std::ostream &TO_STATE_ACTIONS();
 	std::ostream &FROM_STATE_ACTIONS();
 	std::ostream &EOF_ACTIONS();
-
-	void setTableState( TableArray::State );
 
 	virtual std::ostream &COND_GOTO( RedCondPair *trans, int level );
 

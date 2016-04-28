@@ -32,45 +32,19 @@ BinaryExpVar::BinaryExpVar( const CodeGenArgs &args )
 {
 }
 
-/* Determine if we should use indicies or not. */
-void BinaryExpVar::calcIndexSize()
-{
-//	long long sizeWithInds =
-//		indicies.size() +
-//		transCondSpacesWi.size() +
-//		transOffsetsWi.size() +
-//		transLengthsWi.size();
-//
-//	long long sizeWithoutInds =
-//		transCondSpaces.size() +
-//		transOffsets.size() +
-//		transLengths.size();
-//
-	useIndicies = false;
-}
-
 void BinaryExpVar::tableDataPass()
 {
 	taKeyOffsets();
 	taSingleLens();
 	taRangeLens();
 	taIndexOffsets();
-	taIndicies();
-
-	taTransCondSpacesWi();
-	taTransOffsetsWi();
-	taTransLengthsWi();
-
-	taTransCondSpaces();
-	taTransOffsets();
-	taTransLengths();
+	
+	taIndiciesAndTrans();
 
 	taCondTargs();
 	taCondActions();
 
-	taToStateActions();
-	taFromStateActions();
-	taEofActions();
+	taToFromEofActions();
 
 	taEofTransDirect();
 	taEofTransIndexed();
@@ -78,10 +52,7 @@ void BinaryExpVar::tableDataPass()
 	taKeys();
 	taCondKeys();
 
-	taNfaTargs();
-	taNfaOffsets();
-	taNfaPushActions();
-	taNfaPopTrans();
+	taNfa();
 }
 
 void BinaryExpVar::genAnalysis()
@@ -265,42 +236,20 @@ void BinaryExpVar::writeData()
 	taRangeLens();
 	taIndexOffsets();
 
-	if ( useIndicies ) {
-		taIndicies();
-		taTransCondSpacesWi();
-		taTransOffsetsWi();
-		taTransLengthsWi();
-	}
-	else {
-		taTransCondSpaces();
-		taTransOffsets();
-		taTransLengths();
-	}
+	taIndiciesAndTrans();
 
 	taCondKeys();
 	taCondTargs();
 	taCondActions();
 
-	if ( redFsm->anyToStateActions() )
-		taToStateActions();
-
-	if ( redFsm->anyFromStateActions() )
-		taFromStateActions();
-
-	if ( redFsm->anyEofActions() )
-		taEofActions();
+	taToFromEofActions();
 
 	if ( redFsm->anyEofTrans() ) {
 		taEofTransIndexed();
 		taEofTransDirect();
 	}
 
-	if ( redFsm->anyNfaStates() ) {
-		taNfaTargs();
-		taNfaOffsets();
-		taNfaPushActions();
-		taNfaPopTrans();
-	}
+	taNfa();
 
 	STATE_IDS();
 }

@@ -30,14 +30,9 @@
 void SwitchLoopGoto::tableDataPass()
 {
 	taActions();
-	taToStateActions();
-	taFromStateActions();
-	taEofActions();
+	taToFromEofActions();
 
-	taNfaTargs();
-	taNfaOffsets();
-	taNfaPushActions();
-	taNfaPopTrans();
+	taNfa();
 }
 
 void SwitchLoopGoto::genAnalysis()
@@ -75,21 +70,9 @@ void SwitchLoopGoto::writeData()
 	if ( redFsm->anyActions() )
 		taActions();
 
-	if ( redFsm->anyToStateActions() )
-		taToStateActions();
+	taToFromEofActions();
 
-	if ( redFsm->anyFromStateActions() )
-		taFromStateActions();
-
-	if ( redFsm->anyEofActions() )
-		taEofActions();
-
-	if ( redFsm->anyNfaStates() ) {
-		taNfaTargs();
-		taNfaOffsets();
-		taNfaPushActions();
-		taNfaPopTrans();
-	}
+	taNfa();
 
 	STATE_IDS();
 }

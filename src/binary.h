@@ -37,6 +37,15 @@ class Binary
 public:
 	Binary( const CodeGenArgs &args );
 
+private:
+	void taIndicies();
+	void taTransCondSpacesWi();
+	void taTransOffsetsWi();
+	void taTransLengthsWi();
+	void taTransCondSpaces();
+	void taTransOffsets();
+	void taTransLengths();
+
 protected:
 	TableArray keyOffsets;
 	TableArray singleLens;
@@ -51,18 +60,10 @@ protected:
 	TableArray transLengths;
 	TableArray condTargs;
 	TableArray condActions;
-	TableArray toStateActions;
-	TableArray fromStateActions;
-	TableArray eofActions;
 	TableArray eofTransDirect;
 	TableArray eofTransIndexed;
-	TableArray actions;
 	TableArray keys;
 	TableArray condKeys;
-	TableArray nfaTargs;
-	TableArray nfaOffsets;
-	TableArray nfaPushActions;
-	TableArray nfaPopTrans;
 
 	std::ostream &COND_KEYS_v1();
 	std::ostream &COND_SPACES_v1();
@@ -77,13 +78,7 @@ protected:
 	void taSingleLens();
 	void taRangeLens();
 	void taIndexOffsets();
-	void taIndicies();
-	void taTransCondSpacesWi();
-	void taTransOffsetsWi();
-	void taTransLengthsWi();
-	void taTransCondSpaces();
-	void taTransOffsets();
-	void taTransLengths();
+	void taIndiciesAndTrans();
 	void taCondTargs();
 	void taCondActions();
 	void taToStateActions();
@@ -99,6 +94,7 @@ protected:
 	void taNfaPushActions();
 	void taNfaPopTrans();
 
+	void calcIndexSize();
 	void setKeyType();
 
 	void LOCATE_TRANS();
@@ -126,8 +122,6 @@ protected:
 
 	virtual void NFA_PUSH_ACTION( RedNfaTarg *targ ) = 0;
 	virtual void NFA_POP_TEST( RedNfaTarg *targ ) = 0;
-
-	void setTableState( TableArray::State );
 
 	void NFA_PUSH();
 	void NFA_POP();

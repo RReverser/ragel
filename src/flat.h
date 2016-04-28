@@ -40,7 +40,6 @@ public:
 	virtual ~Flat() { }
 
 protected:
-	TableArray actions;
 	TableArray keys;
 	TableArray charClass;
 	TableArray flatIndexOffset;
@@ -50,14 +49,7 @@ protected:
 	TableArray transOffsets;
 	TableArray condTargs;
 	TableArray condActions;
-	TableArray toStateActions;
-	TableArray fromStateActions;
-	TableArray eofActions;
 	TableArray eofTrans;
-	TableArray nfaTargs;
-	TableArray nfaOffsets;
-	TableArray nfaPushActions;
-	TableArray nfaPopTrans;
 
 	void taKeys();
 	void taKeySpans();
@@ -116,8 +108,6 @@ protected:
 	virtual void COND_ACTION( RedCondPair *cond ) = 0;
 	virtual void NFA_PUSH_ACTION( RedNfaTarg *targ ) = 0;
 	virtual void NFA_POP_TEST( RedNfaTarg *targ ) = 0;
-
-	virtual void setTableState( TableArray::State );
 
 	void NFA_PUSH();
 	void NFA_POP();

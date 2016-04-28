@@ -29,14 +29,9 @@
 
 void SwitchExpGoto::tableDataPass()
 {
-	taToStateActions();
-	taFromStateActions();
-	taEofActions();
+	taToFromEofActions();
 
-	taNfaTargs();
-	taNfaOffsets();
-	taNfaPushActions();
-	taNfaPopTrans();
+	taNfa();
 }
 
 void SwitchExpGoto::genAnalysis()
@@ -202,21 +197,9 @@ void SwitchExpGoto::NFA_POP_TEST( RedNfaTarg *targ )
 
 void SwitchExpGoto::writeData()
 {
-	if ( redFsm->anyToStateActions() )
-		taToStateActions();
+	taToFromEofActions();
 
-	if ( redFsm->anyFromStateActions() )
-		taFromStateActions();
-
-	if ( redFsm->anyEofActions() )
-		taEofActions();
-
-	if ( redFsm->anyNfaStates() ) {
-		taNfaTargs();
-		taNfaOffsets();
-		taNfaPushActions();
-		taNfaPopTrans();
-	}
+	taNfa();
 
 	STATE_IDS();
 }

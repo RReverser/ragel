@@ -35,7 +35,6 @@ class BinaryExpVar
 public:
 	BinaryExpVar( const CodeGenArgs &args );
 
-	void calcIndexSize();
 	void tableDataPass();
 
 	virtual void genAnalysis();
