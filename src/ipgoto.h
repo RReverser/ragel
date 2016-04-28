@@ -62,7 +62,6 @@ public:
 	void NBREAK( ostream &ret, int targState, bool csForced );
 
 	virtual void genAnalysis();
-	virtual void writeData();
 	virtual void writeExec();
 
 protected:

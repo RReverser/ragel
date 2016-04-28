@@ -33,7 +33,6 @@ class BinaryExpGoto : public Binary
 public:
 	BinaryExpGoto( const CodeGenArgs &args );
 
-	virtual void writeData();
 	virtual void writeExec();
 
 protected:

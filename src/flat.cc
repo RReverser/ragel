@@ -99,12 +99,6 @@ void Flat::genAnalysis()
 	setTableState( TableArray::GeneratePass );
 }
 
-void Flat::writeData()
-{
-	tableDataPass();
-	STATE_IDS();
-}
-
 void Flat::taFlatIndexOffset()
 {
 	flatIndexOffset.start();

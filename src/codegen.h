@@ -137,6 +137,7 @@ public:
 	virtual void writeStart();
 	virtual void writeFirstFinal();
 	virtual void writeError();
+	virtual void writeData(); 
 	virtual void statsSummary();
 
 protected:

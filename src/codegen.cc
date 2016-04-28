@@ -1046,6 +1046,12 @@ void CodeGen::writeError()
 	out << ERROR_STATE();
 }
 
+void CodeGen::writeData()
+{
+	tableDataPass();
+	STATE_IDS();
+}
+
 void CodeGen::writeExports()
 {
 	if ( exportList.length() > 0 ) {

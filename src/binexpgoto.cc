@@ -171,29 +171,6 @@ std::ostream &BinaryExpGoto::ACTION_SWITCH()
 	return out;
 }
 
-void BinaryExpGoto::writeData()
-{
-	taKeyOffsets();
-
-	taKeys();
-
-	taSingleLens();
-	taRangeLens();
-	taIndexOffsets();
-	
-	taIndiciesAndTrans();
-
-	taCondKeys();
-	taCondTargs();
-	taCondActions();
-
-	taToFromEofActions();
-
-	taNfa();
-
-	STATE_IDS();
-}
-
 void BinaryExpGoto::writeExec()
 {
 	testEofUsed = false;

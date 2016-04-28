@@ -634,13 +634,6 @@ void IpGoto::setLabelsNeeded()
 	}
 }
 
-void IpGoto::writeData()
-{
-	STATE_IDS();
-
-	taNfa();
-}
-
 void IpGoto::writeExec()
 {
 	/* Must set labels immediately before writing because we may depend on the

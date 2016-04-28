@@ -170,29 +170,6 @@ std::ostream &BinaryExpVar::ACTION_SWITCH()
 	return out;
 }
 
-void BinaryExpVar::writeData()
-{
-	taKeyOffsets();
-
-	taKeys();
-
-	taSingleLens();
-	taRangeLens();
-	taIndexOffsets();
-
-	taIndiciesAndTrans();
-
-	taCondKeys();
-	taCondTargs();
-	taCondActions();
-
-	taToFromEofActions();
-
-	taNfa();
-
-	STATE_IDS();
-}
-
 void BinaryExpVar::writeExec()
 {
 	testEofUsed = false;

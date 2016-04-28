@@ -194,16 +194,6 @@ void SwitchExpGoto::NFA_POP_TEST( RedNfaTarg *targ )
 	nfaPopTrans.value( act );
 }
 
-
-void SwitchExpGoto::writeData()
-{
-	taToFromEofActions();
-
-	taNfa();
-
-	STATE_IDS();
-}
-
 void SwitchExpGoto::writeExec()
 {
 	testEofUsed = false;

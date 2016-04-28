@@ -33,7 +33,8 @@ BinaryLoopGoto::BinaryLoopGoto( const CodeGenArgs &args )
 
 void BinaryLoopGoto::tableDataPass()
 {
-	taActions();
+	if ( redFsm->anyActions() )
+		taActions();
 	Binary::tableDataPass();
 }
 
@@ -149,34 +150,6 @@ std::ostream &BinaryLoopGoto::ACTION_SWITCH()
 	}
 
 	return out;
-}
-
-
-void BinaryLoopGoto::writeData()
-{
-	/* If there are any transtion functions then output the array. If there
-	 * are none, don't bother emitting an empty array that won't be used. */
-	if ( redFsm->anyActions() )
-		taActions();
-
-	taKeyOffsets();
-	taKeys();
-	taSingleLens();
-	taRangeLens();
-	taIndexOffsets();
-
-	taIndiciesAndTrans();
-
-	taCondKeys();
-
-	taCondTargs();
-	taCondActions();
-
-	taToFromEofActions();
-
-	taNfa();
-
-	STATE_IDS();
 }
 
 void BinaryLoopGoto::writeExec()

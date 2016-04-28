@@ -35,7 +35,6 @@ class BinaryExpVar
 public:
 	BinaryExpVar( const CodeGenArgs &args );
 
-	virtual void writeData();
 	virtual void writeExec();
 
 protected:

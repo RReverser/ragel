@@ -29,7 +29,9 @@
 
 void SwitchLoopGoto::tableDataPass()
 {
-	taActions();
+	if ( redFsm->anyActions() )
+		taActions();
+
 	taToFromEofActions();
 
 	taNfa();
@@ -63,18 +65,6 @@ void SwitchLoopGoto::genAnalysis()
 
 	/* Switch the tables over to the code gen mode. */
 	setTableState( TableArray::GeneratePass );
-}
-
-void SwitchLoopGoto::writeData()
-{
-	if ( redFsm->anyActions() )
-		taActions();
-
-	taToFromEofActions();
-
-	taNfa();
-
-	STATE_IDS();
 }
 
 std::ostream &SwitchLoopGoto::ACTION_SWITCH()
