@@ -719,9 +719,9 @@ void XMLCodeGen::writeAction( Action *action )
 	out << "</action>\n";
 }
 
-void xmlEscapeHost( std::ostream &out, char *data, long len )
+void xmlEscapeHost( std::ostream &out, const char *data, long len )
 {
-	char *end = data + len;
+	const char *end = data + len;
 	while ( data != end ) {
 		switch ( *data ) {
 		case '<': out << "&lt;"; break;
@@ -1422,8 +1422,29 @@ void InputData::writeXML( std::ostream &out )
 	for ( ParserDict::Iter parser = parserDict; parser.lte(); parser++ ) {
 		ParseData *pd = parser->value->pd;
 		if ( pd->instanceList.length() > 0 )
-			pd->generateXML( *outStream );
+			pd->generateXML( out );
 	}
+
+	out << "<output>";
+
+	for ( InputItemList::Iter ii = inputItems; ii.lte(); ii++ ) {
+		if ( ii->type == InputItem::Write ) {
+			out << "<write_";
+
+			for ( long i = 0; i < ii->writeArgs.length() - 1; i++ )
+				out << ii->writeArgs.data[i] << " ";
+
+			out << "/>\n";
+		}
+		else {
+			out << "<text>";
+			string str = ii->data.str();
+			xmlEscapeHost( out, str.c_str(), str.length() );
+			out << "</text>";
+		}
+	}
+
+	out << "</output>";
 
 	out << "</ragel>\n";
 }
