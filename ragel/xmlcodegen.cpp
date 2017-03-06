@@ -1425,7 +1425,7 @@ void InputData::writeXML( std::ostream &out )
 			pd->generateXML( out );
 	}
 
-	out << "<output>";
+	out << "<output length=\"" << inputItems.length() << "\">";
 
 	for ( InputItemList::Iter ii = inputItems; ii.lte(); ii++ ) {
 		if ( ii->type == InputItem::Write ) {
