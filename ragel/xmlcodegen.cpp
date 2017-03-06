@@ -1431,8 +1431,10 @@ void InputData::writeXML( std::ostream &out )
 		if ( ii->type == InputItem::Write ) {
 			out << "<write_";
 
-			for ( long i = 0; i < ii->writeArgs.length() - 1; i++ )
-				out << ii->writeArgs.data[i] << " ";
+			out << ii->writeArgs.data[0];
+
+			for ( long i = 1; i < ii->writeArgs.length() - 1; i++ )
+				out << " " << ii->writeArgs.data[i] << "=\"t\"";
 
 			out << "/>\n";
 		}
